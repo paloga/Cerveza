@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  </head>
+  <body>
+    <div class="w3-container">
+      <h2>Cerveza</h2>
+      <div class="w3-card-4" style="width:50%">
+        <img src="{{ cerveza.foto }}" alt="Norway" style="width:100%">
+        <div class="w3-container">
+            <p>Nombre: {{ cerveza.nombre }}</p>
+            <p>Pais: {{ cerveza.pais }}</p>
+            <p>Población: {{ cerveza.poblacion }}</p>
+            <p>Tipo: {{ cerveza.tipo }}</p>
+            {% if cerveza.importancion == 1 %}
+              <p>Importación: Si</p>
+            {% else %}
+              <p>Importación: No</p>
+            {% endif %}
+            <p>Cantidad: {{ cerveza.cantidad }}</p>
+            <p>Fecha: {{ cerveza.fechaAlmacen|date('Y-m-d') }}</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
