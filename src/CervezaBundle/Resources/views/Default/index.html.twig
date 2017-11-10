@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
+      div{
+        float: left;
+      }
     </style>
   </head>
   <body>
     {% for cerveza in cervezas %}
-      <div class="w3-container" style="width:600px">
-        <div class="w3-card-4" style="width:50%">
+      <div class="w3-container" style="width:350px">
+        <div class="w3-card-4" style="width:100%">
           <img src="{{ cerveza.foto }}" alt="Norway" style="width:100%">
           <div class="w3-container">
             <p>Nombre: {{ cerveza.nombre }}</p>

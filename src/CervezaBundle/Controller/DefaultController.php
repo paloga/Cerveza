@@ -5,6 +5,8 @@ namespace CervezaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use CervezaBundle\Entity\Cerveza;
+use CervezaBundle\Form\CervezaType;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
@@ -27,28 +29,46 @@ class DefaultController extends Controller
       return $this->render('CervezaBundle:Default:cerveza.html.twig', array('cerveza' => $cervezas));
     }
     /**
-    * @Route("/insertar/{nombre}/{pais}/{poblacion}")
+    * @Route("/insertar")
      */
-    public function insertarCervezaAction($nombre, $pais, $poblacion, $tipo="hjsd", $importacion=1, $tamano=2, $cantidad=2, $foto="https://www.drinkexpress.cl/wp-content/uploads/2017/07/cerveza-anchor-porter-12-oz-1000x1000.jpg")
+    public function insertarCervezaAction(Request $request)
     {
-      $em = $this->getDoctrine()->getManager();
-
       $cerveza = new Cerveza();
-      $cerveza -> setNombre($nombre);
-      $cerveza -> setPais($pais);
-      $cerveza -> setPoblacion($poblacion);
-      $cerveza -> setTipo($tipo);
-      $cerveza -> setImportancion($importacion);
-      $cerveza -> setTamano($tamano);
-      $cerveza -> setFechaAlmacen(\dateTime::createFromFormat("d/m/Y","10/6/2017"));
-      $cerveza -> setCantidad($cantidad);
-      $cerveza -> setFoto($foto);
+      $form = $this -> createForm(CervezaType::Class, $cerveza);
+      $form->handleRequest($request);
+      if ($form -> isSubmitted()&& $form -> isValid()){
+        $cerveza = $form->getData();
+        $em = $this->getDoctrine()->getManager();
+        $em -> persist($cerveza);
+        $em -> flush();
+        return $this->redirectToRoute('listaCervezas');
+      }
+
+      /*$em = $this->getDoctrine()->getManager();
 
       $em -> persist($cerveza);
 
-      $em -> flush();
+      $em -> flush();*/
 
-      return $this->redirectToRoute('listaCervezas');
+      return $this->render('CervezaBundle:Default:insertar.html.twig', array('form' => $form -> createView()));
+      //return $this->redirectToRoute('listaCervezas');
     }
-    
+    /**
+    * @Route("/actualizar/{id}")
+     */
+    public function actualizarCervezaAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager();
+      $cerveza = $em->getRepository(Cerveza::Class)->find($id);
+      $form = $this -> createForm(CervezaType::Class, $cerveza);
+      $form->handleRequest($request);
+      if ($form -> isSubmitted()&& $form -> isValid()){
+        $cerveza = $form->getData();
+        $em -> persist($cerveza);
+        $em -> flush();
+        return $this->redirectToRoute('listaCervezas');
+      }
+      return $this->render('CervezaBundle:Default:insertar.html.twig', array('form' => $form -> createView()));
+
+    }
 }
